@@ -1,0 +1,35 @@
+/** we are creating a css file for person, so we need to bin this file to our person.js so that the styling will only affect that file*/
+/** However to see our styling, you have to import this styling file to the file it's being binding to */
+
+.Person {
+
+    width: 60%;
+    margin: auto;
+    border: 1px solid #eeeeee;
+    box-shadow: 0 2px 3px #cccccc;
+    padding: 16px;
+    text-align: center;
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
