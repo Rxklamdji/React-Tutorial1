@@ -18,7 +18,9 @@ class App extends Component {       //Defining Component: We create a JS Class A
         persons2: [
             { name: "Isaac", number: Math.floor(Math.random() * 30 ) },    //Then to see this, we have to call this in the return method by identifying their index number
             { name: "Chao" , number: Math.floor(Math.random() * 30 ) }    //The Good thing about State is that to change value of the variables, we just come here and the rest will be automatically change by React
-        ]
+        ],
+
+        showPersons: false   //So with this: "by default, app won't show Persons" untill we click the "SwitchName Button"; now we can go back to our New Div to implement this; we are trying to incorporate a condition, so that's why we put a boolean here.
 
     }
 
@@ -57,6 +59,13 @@ class App extends Component {       //Defining Component: We create a JS Class A
     }
 
 
+    togglePersonsHandler = () => {    //Here, we need to create the togglePersonsHandler; we want a certain condition to be met before we can show our phrases; first go to "stateMethod" and add a boolean property since we trying to incorporate a condition.
+
+        //since we have 2 components method "state and set.state", we create a const function to affect "State" because it is our main one, but for "set.state" we can just call it and change it directly
+        const doesShow = this.state.showPersons; //so here we are creating a function that will our Persons in the "StateMethod"
+        this.setState({showPersons:!doesShow })   //so for our "set.state" if doesshow is false, it will set ShowPerson to True; if doesshow is true, it will set ShowPerson to false;
+    }
+
 
     render() {         //React uses " Render " to return something on our screen by using the React-DOM
 
@@ -78,31 +87,36 @@ class App extends Component {       //Defining Component: We create a JS Class A
         <h1 /** This is our Main Header*/>Romeo Klamadji Calendar</h1>
         <p /** This will be 2nd header of our Webpage*/>This will Track all Our Friends Activities</p>
 
-        <button
+        <button /** to impose condition, we have to also change the handler with togglePerson (which we will have to create) */
             style={styleButton}
-            onClick={() => this.switchNameHandler('ChangeItWithRomeo')}>Switch Name
+            onClick={this.togglePersonsHandler}>Switch Name
         </button>
 
+            { this.state.showPersons ? //"?" will check this condition to see if it is true; so if this is true, then what is"since we create our boolean variable in state, we use "state.persons" to call it back; remember React only speak in js language.
+                <div /** We are going to use condition like "if" here and that's why we are putting our return phrases into div */>
 
-              <Person name = {this.state.persons2[0].name} number = {this.state.persons2[0].number} />
+                      <Person name = {this.state.persons2[0].name} number = {this.state.persons2[0].number} />
 
-              <Person name = {this.state.persons2[1].name} number = {this.state.persons2[1].number}
-                      changed={this.nameChangedHandler}/>
+                      <Person name = {this.state.persons2[1].name} number = {this.state.persons2[1].number}
+                              changed={this.nameChangedHandler}/>
 
-              <Person name = {this.state.persons[0].name} number = {this.state.persons[0].number} />
-                <Person name = {this.state.persons[1].name} number = {this.state.persons[1].number} />
+                      <Person name = {this.state.persons[0].name} number = {this.state.persons[0].number} />
+                        <Person name = {this.state.persons[1].name} number = {this.state.persons[1].number} />
 
-            <Person name = 'Jenne' number = {Math.floor(Math.random() * 30 )} >Like: Gardening</Person>
+                    <Person name = 'Jenne' number = {Math.floor(Math.random() * 30 )} >Like: Gardening</Person>
 
-            <Person name = 'Andrea' number = {Math.floor(Math.random() * 30)}>
-            Like: Drinking Coffee
-            </Person>
+                    <Person name = 'Andrea' number = {Math.floor(Math.random() * 30)}>
+                    Like: Drinking Coffee
+                    </Person>
 
-            <Person name = 'clickToChangeName' number = {Math.floor(Math.random() * 30)}
-                  click={this.switchNameHandler.bind(this, 'ClickToNameItRomeo')}>
-              Like: Soccer
-            </Person>
+                    <Person name = 'clickToChangeName' number = {Math.floor(Math.random() * 30)}
+                          click={this.switchNameHandler.bind(this, 'ClickToNameItRomeo')}>
+                      Like: Soccer
+                    </Person>
 
+                </div> : null //This will be our else statement; so if it is not true, if "?" check not true, return nothing because we didn't enter anything than u null;
+
+            }
 
       </div>
 
