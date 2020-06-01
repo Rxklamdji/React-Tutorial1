@@ -2,7 +2,8 @@ import React, { Component } from 'react';   // "component " imported from react 
 
 import './App.css';
 
-import Person from './Person/Person';     //We are importing our New Component that we created "Person" from the "Person,js" file, plus we have to put our "Person ClassName" in the Return of the App.js, so that this will appear on the screen of our app, since this is the Root of our App and to see stuff appear on the screen it has to be return here
+import Person from './Person/Person';
+import person from "./Person/Person";     //We are importing our New Component that we created "Person" from the "Person,js" file, plus we have to put our "Person ClassName" in the Return of the App.js, so that this will appear on the screen of our app, since this is the Root of our App and to see stuff appear on the screen it has to be return here
 
 //Remember below is the most used way of creating components in React; you will learn how to create a component using another way called React Ox
 class App extends Component {       //Defining Component: We create a JS Class APP,which inherit from class "component " imported from react library
@@ -11,8 +12,8 @@ class App extends Component {       //Defining Component: We create a JS Class A
 
     state = {    //Unlike Props, you can directly passed a value into a placeholder in the same file where you invoking the value and placeholder
         persons: [
-            { name: "Roberta", number: Math.floor(Math.random() * 30 ) },    //Then to see this, we have to call this in the return method by identifying their index number
-            { name: "Masha" , number: Math.floor(Math.random() * 30 ) }    //The Good thing about State is that to change value of the variables, we just come here and the rest will be automatically change by React
+            { id:'1', name: "Roberta", number: Math.floor(Math.random() * 30 ) },    //Then to see this, we have to call this in the return method by identifying their index number
+            { id: '2', name: "Masha" , number: Math.floor(Math.random() * 30 ) }    //The Good thing about State is that to change value of the variables, we just come here and the rest will be automatically change by React
         ],
 
         persons2: [
@@ -27,35 +28,55 @@ class App extends Component {       //Defining Component: We create a JS Class A
     //Putting an Argument like "NewName" will allow us to take it and bind it to the click and when we click on it the function can direclty be executed
     //NewName will allow us to call it in switchNameHandler and click to changeName for the 1st sentence... ALways use Bin because it is better..
 
-    switchNameHandler = (NewName) => {   //This will be the method that will be exeuted as soon as we click on the button, we call it event handler because we need an action like click to happen first and this is an action also that is trigger by another action
-        //console.log('Was Clicked!!');   //This will make Console write Was clicked as soon as we clicked the button
 
-        //StateMethod makes React to update the "DOM" or the Web; it analyze the code and update it using state where it needs to do so
-        this.setState({             //Now, this "SetMethodState will set the original values of "persons2" to these given values
 
-            persons2: [
 
-                { name: NewName, number: Math.floor(Math.random() * 30 ) },    //Then to see this, we have to call this in the return method by identifying their index number
-                { name: "ChangedToMillo" , number: Math.floor(Math.random() * 30 ) }
+    //This is our event handler (help us capture what the user enter) for the method of typing name that we just created in person; we will use "eventTarget" to point out where we want to input the name:
+    //With These updated codes we can delete our names and enter names into the field name and see them being returned at the same time
+    nameChangedHandler = (event, id) => {     //Of course to link an event of our root app to a file component we always gotta use "props"
 
-            ]
-        })
+        //This is another method that gives same results like Map method without using it
+        const personIndex = this.state.persons.findIndex(p => {
+            return p.id === id;   //We need a True or false to tell React if this is the person we are looking for  //This help us return the person id when it matched to what was sent to them;
 
+        });    //this will find the index of the person field where we are typing
+
+        const person = {      //here we are creating a js object that distribute all the properties of the object we are fecthing in
+            ...this.state.persons[personIndex]
+        };
+
+        person.name = event.target.value;   //here we are capturing the new variable we just created
+
+        const persons = [...this.state.persons];  //we are updating our array
+        persons[personIndex] = person;      //this will help us update our new copy
+
+
+        //These persons is our updated persons array which is a copy adjusted of our old array
+        this.setState({
+            persons: persons           //Now, this "SetMethodState will set the original values of "persons2" to these given values
+
+            /**  persons2: [
+
+             { name: "JhonnyTheCat", number: Math.floor(Math.random() * 30 ) },    //Then to see this, we have to call this in the return method by identifying their index number
+             { name: event.target.value , number: Math.floor(Math.random() * 30 ) }   //Of course to use or see this we need to put it in the render-return-div
+
+             ]
+             })  */
+
+        });
     }
 
-    //This is our event handler for the method of typing name that we just created in person; we will use "eventTarget" to point out where we want to input the name:
-    nameChangedHandler = (event) => {     //Of course to link an event of our root app to a file component we always gotta use "props"
+    //We want to introduce a new Method like deleteperson
 
-        this.setState({             //Now, this "SetMethodState will set the original values of "persons2" to these given values
+    deletePersonHandler = (personIndex) => {  //We want to be able to delete a person when we "Click button"; so we will add this method to our if statement since we want "Person" to be deleted when we add the button
 
-            persons2: [
-
-                { name: "JhonnyTheCat", number: Math.floor(Math.random() * 30 ) },    //Then to see this, we have to call this in the return method by identifying their index number
-                { name: event.target.value , number: Math.floor(Math.random() * 30 ) }   //Of course to use or see this we need to put it in the render-return-div
-
-            ]
-        })
-
+        //The Flaws of this method is that in js "object and array" are reference type, so this will modify the original array we have, we need to copy the array before altering it;
+        //So, now we will create a copy of the original array before altering it;
+        //const persons = this.state.persons.slice();  //Instead of altering the original array, we will make another copy of it with slice() here;  //This help us fetch all of the persons that are in the stateMethod
+        //Best alternative will be to just do a "Spread"
+        const persons = [...this.state.persons];   //Ex feature; this will spread the original array we have into state and create a new copy;
+        persons.splice(personIndex,1);  //Now we are creating a new version of that person array by "Splicing it and taking the one with Index No1;
+        this.setState({persons: persons})  //Here, we are calling the new updated "Person" that we have after splicing the index 1;
     }
 
 
@@ -63,11 +84,11 @@ class App extends Component {       //Defining Component: We create a JS Class A
 
         //since we have 2 components method "state and set.state", we create a const function to affect "State" because it is our main one, but for "set.state" we can just call it and change it directly
         const doesShow = this.state.showPersons; //so here we are creating a function that will our Persons in the "StateMethod"
-        this.setState({showPersons:!doesShow })   //so for our "set.state" if doesshow is false, it will set ShowPerson to True; if doesshow is true, it will set ShowPerson to false;
+        this.setState({showPersons:!doesShow });   //so for our "set.state" if doesshow is false, it will set ShowPerson to True; if doesshow is true, it will set ShowPerson to false;
     }
 
 
-    render() {         //React uses " Render " to return something on our screen by using the React-DOM
+    render() {         //React uses " Render (which allow normal js code not jsx like the rest, we input css and more js codes); " to return something on our screen by using the React-DOM; This is like the Head in HTML where you can put some css codes to style the page here; so React will return to the screen everything that is in the "Render {}"
 
         // We will use this style on our button so that you can see it well defined by a button; This Method of styling allow us to target one specific target by creating a class for it
         const styleButton = {      //This is a 2nd method of styling, but this is to incorporate style directly in line; and this code has to be written in js code, so in '';
@@ -80,45 +101,55 @@ class App extends Component {       //Defining Component: We create a JS Class A
 
         };
 
+        //This is the Most use and clean way to create a Condition; we first create our method "Let" that is what will happened if 'if checks not true" then we create our "if statement"
+
+        let persons = null;     //In the Render {} we can directly type normal js codes and call our "persons method" and set it to null as default;
+
+        if (this.state.showPersons) {         //this is our boolean check to see if this is true; if it is true, then whatever is in the bracket will be executed
+
+            persons = (
+
+                <div /** We are going to use condition like "if" here and that's why we are putting our return phrases into div */>
+
+                    {this.state.persons.map((person, index) => {    //so here we want to return the list of array we have present into "state.persons" because they are written in js code so we need to translate it to
+
+                        return <Person
+                                    click = {() => this.deletePersonHandler(index)}
+                                    name = { person.name}
+                                    number = {person.number}
+                                    key = {person.id}  /** This is for React to keep up with our delete method and see how our delete is affecting the remaining numbers that we have left; usually this will be handle with 'id' from the tables of our database; but here we created a fake id */
+                                    changed={(event) => this.nameChangedHandler(event, person.id)}    //This is to update the field of the person for which we type; this is connect into the method "NameChangehandler" with new const
+
+                                />
+
+                    })}
+
+                </div>
+
+            );
+
+        }
+
+
+
+
     return (          //We write our HTML inside the parenthese of this return; as you can see here we are only using One component:App, now let's add another one;
+
 
         <div className="App">
 
-        <h1 /** This is our Main Header*/>Romeo Klamadji Calendar</h1>
-        <p /** This will be 2nd header of our Webpage*/>This will Track all Our Friends Activities</p>
+            <h1 /** This is our Main Header*/>Romeo Klamadji Calendar</h1>
+            <p /** This will be 2nd header of our Webpage*/>This will Track all Our Friends Activities</p>
 
-        <button /** to impose condition, we have to also change the handler with togglePerson (which we will have to create) */
-            style={styleButton}
-            onClick={this.togglePersonsHandler}>Switch Name
-        </button>
+            <button /** to impose condition, we have to also change the handler with togglePerson (which we will have to create) */
+                style={styleButton}
+                onClick={this.togglePersonsHandler}>Switch Name
+            </button>
 
-            { this.state.showPersons ? //"?" will check this condition to see if it is true; so if this is true, then what is"since we create our boolean variable in state, we use "state.persons" to call it back; remember React only speak in js language.
-                <div /** We are going to use condition like "if" here and that's why we are putting our return phrases into div */>
+            {persons /** This will output the content we insert refers to that person that we set to null at the begining of our Condition; since we set it to null, then when React Render it won't show anything then*/}
 
-                      <Person name = {this.state.persons2[0].name} number = {this.state.persons2[0].number} />
 
-                      <Person name = {this.state.persons2[1].name} number = {this.state.persons2[1].number}
-                              changed={this.nameChangedHandler}/>
-
-                      <Person name = {this.state.persons[0].name} number = {this.state.persons[0].number} />
-                        <Person name = {this.state.persons[1].name} number = {this.state.persons[1].number} />
-
-                    <Person name = 'Jenne' number = {Math.floor(Math.random() * 30 )} >Like: Gardening</Person>
-
-                    <Person name = 'Andrea' number = {Math.floor(Math.random() * 30)}>
-                    Like: Drinking Coffee
-                    </Person>
-
-                    <Person name = 'clickToChangeName' number = {Math.floor(Math.random() * 30)}
-                          click={this.switchNameHandler.bind(this, 'ClickToNameItRomeo')}>
-                      Like: Soccer
-                    </Person>
-
-                </div> : null //This will be our else statement; so if it is not true, if "?" check not true, return nothing because we didn't enter anything than u null;
-
-            }
-
-      </div>
+        </div>
 
     );
 
