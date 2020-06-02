@@ -2,6 +2,8 @@ import React, { Component } from 'react';   // "component " imported from react 
 
 import './App.css';
 
+import Radium, {StyleRoot} from "radium";    //for Radium, we are just importing a default version of the file, and "StyleRoot" is just another component
+
 import Person from './Person/Person';
 import person from "./Person/Person";     //We are importing our New Component that we created "Person" from the "Person,js" file, plus we have to put our "Person ClassName" in the Return of the App.js, so that this will appear on the screen of our app, since this is the Root of our App and to see stuff appear on the screen it has to be return here
 
@@ -13,8 +15,9 @@ class App extends Component {       //Defining Component: We create a JS Class A
     state = {    //Unlike Props, you can directly passed a value into a placeholder in the same file where you invoking the value and placeholder
         persons: [
             { id:'1', name: "Roberta", number: Math.floor(Math.random() * 30 ) },    //Then to see this, we have to call this in the return method by identifying their index number
-            { id: '2', name: "Masha" , number: Math.floor(Math.random() * 30 ) }    //The Good thing about State is that to change value of the variables, we just come here and the rest will be automatically change by React
-        ],
+            { id: '2', name: "Masha" , number: Math.floor(Math.random() * 30 ) },    //The Good thing about State is that to change value of the variables, we just come here and the rest will be automatically change by React
+            { id: '3', name: "Alexis" ,number: Math.floor(Math.random() * 30 )}
+],
 
         persons2: [
             { name: "Isaac", number: Math.floor(Math.random() * 30 ) },    //Then to see this, we have to call this in the return method by identifying their index number
@@ -91,13 +94,18 @@ class App extends Component {       //Defining Component: We create a JS Class A
     render() {         //React uses " Render (which allow normal js code not jsx like the rest, we input css and more js codes); " to return something on our screen by using the React-DOM; This is like the Head in HTML where you can put some css codes to style the page here; so React will return to the screen everything that is in the "Render {}"
 
         // We will use this style on our button so that you can see it well defined by a button; This Method of styling allow us to target one specific target by creating a class for it
-        const styleButton = {      //This is a 2nd method of styling, but this is to incorporate style directly in line; and this code has to be written in js code, so in '';
+        const styleButton = {      //These are the colors and style that will appear by default on our button; This is a 2nd method of styling, but this is to incorporate style directly in line; and this code has to be written in js code, so you can manipulate styling with any js code that you want, so in '';
 
             backgroundColor: '#4F42B5',
+            color: 'white',
             font: 'inherit',
             border: '1px solid blue',
             padding: '8px',
-            cursor: 'pointer'
+            cursor: 'pointer',
+            ':hover': {            //Here we are adding some hoover effect and also we have to overright this where we overwrite style.backgroundcolor
+                backgroundColor: 'lightgreen',
+                color: 'black'
+            }
 
         };
 
@@ -128,7 +136,33 @@ class App extends Component {       //Defining Component: We create a JS Class A
 
             );
 
+            //Here we wanted to add a dynamic style that will appear as soon as we click the button, so that the color of the button changes after user click on it!!
+            styleButton.backgroundColor = 'red';
+            styleButton.color = 'black';
+
+            //Here we are overwriting hoover too
+            styleButton[':hover'] = {        //This is for after user click on the button, how it will appear so we still use Style button as method to style;
+                backgroundColor: 'yellow',
+                    color: 'black'
+            };
+
         }
+
+
+        //We are creating new classes here to assign style to our phrases; Since we created 2 classes of styling 'Red' 'Bold', then to call them together, we join both to create an only one new class;
+        const PhraseStyleClass = [] ;   //Now, we can call "PhraseStyleClass" to which ever phrase we wanna style
+
+        //Here we want to set some Conditional Styling Method; so if we have less than 1 or equal to 1 element present, then the red style will be executed
+        if (this.state.persons.length <= 1) {
+            PhraseStyleClass.push('red');       //So if we have less than 1 phrases present, we want our style class to push the red class as a style
+        }
+        //If the condition here check to be false, then it wont be executed; if it checked to be true, then it will be executed
+        if (this.state.persons.length <= 2) {      //Since we have already a condition for lessthan1, this will have two styling present for lessthan1 and lessthan2
+            PhraseStyleClass.push('bold');
+        }
+
+
+
 
 
 
@@ -136,20 +170,23 @@ class App extends Component {       //Defining Component: We create a JS Class A
     return (          //We write our HTML inside the parenthese of this return; as you can see here we are only using One component:App, now let's add another one;
 
 
+        <StyleRoot>
+
+
         <div className="App">
 
             <h1 /** This is our Main Header*/>Romeo Klamadji Calendar</h1>
-            <p /** This will be 2nd header of our Webpage*/>This will Track all Our Friends Activities</p>
+            <p className={PhraseStyleClass.join(' ') /** Since we created 2 classes of styling 'Red' 'Bold', then to call them together, we join both with the joinclause 'spaceheredontforget' to create an only one new class;*/} /** by calling the classes variables here, we are styling this using the 2 classes that we created*/>This will Track all Our Friends Activities</p>
 
             <button /** to impose condition, we have to also change the handler with togglePerson (which we will have to create) */
-                style={styleButton}
+                style={styleButton    /** We are styling our button with simple inline styling here; you can find the class "StyleButton up there */}
                 onClick={this.togglePersonsHandler}>Switch Name
             </button>
 
             {persons /** This will output the content we insert refers to that person that we set to null at the begining of our Condition; since we set it to null, then when React Render it won't show anything then*/}
 
-
         </div>
+        </StyleRoot>   //To call this StyleRoot you have to import it frist, then wrap it around our app body
 
     );
 
@@ -159,7 +196,7 @@ class App extends Component {       //Defining Component: We create a JS Class A
   }
 }
 
-export default App;     //We are exporting the CLass App that we created above as a default;
+export default Radium(App);     //Higher Order Component "Radium" wrapping our app to help us use some extra features, especially adding Hoover style on button //We are exporting the CLass App that we created above as a default;
 
 
 

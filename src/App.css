@@ -1,4 +1,15 @@
-.App {
+.App { /** we are editing the entire app page */
   text-align: center;
-
 }
+
+.red { /** Here we are creating a class '.' named red*/
+  color: red;
+}
+
+.bold {    /** Here we are creating a class '.' named bold; these 2 classes will be available globally for the entire app */
+  font-weight: bold;
+}
+
+/** since we can't call "hoover directly for styling changing on clicking on element" we have to install it through terminal typing there "npm install --save radium" and import this element from any file that we want to use it */
+
+
